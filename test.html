@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Popup with Syntax Highlighting</title>
+  <!-- Prism.js CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Button zum Öffnen des Popups -->
+  <button id="showPopup">Show SQL Statement</button>
+
+  <!-- Popup -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-content">
+      <button class="close-btn" id="closePopup">&times;</button>
+      <pre><code id="sqlCode" class="language-sql">
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+      </code></pre>
+      <button class="copy-btn" id="copySQL">Copy SQL</button>
+    </div>
+  </div>
+
+  <!-- Prism.js -->
+ 
+  
+</body>
+</html>
