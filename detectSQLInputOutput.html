@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Parser with Input and Output Tables</title>
+</head>
+<body>
+    <h1>SQL Statement Parser</h1>
+    <p>Gib dein SQL-Statement ein:</p>
+    <textarea id="sqlInput" rows="8" cols="70" placeholder="INSERT INTO table2 SELECT * FROM table1 WHERE condition;"></textarea>
+    <br>
+    <button onclick="parseSQL()">Analysieren</button>
+    <h2>Ergebnisse</h2>
+    <p><strong>Input-Tabellen:</strong> <span id="inputTables">-</span></p>
+    <p><strong>Output-Tabelle:</strong> <span id="outputTable">-</span></p>
+    <script src="detectSQLInputOutput.js"></script>
+    <script>
+        //const sql = document.getElementById('sqlInput').value;
+        sql5 = "select * from table"
+        sql4 = "INSERT INTO table2 SELECT * FROM table1 WHERE condition;"
+        sql2 = `UPDATE orders2
+SET orders.total_price = orders.total_price + discounts.discount_amount
+FROM orders
+INNER JOIN discounts
+ON orders.customer_id = discounts.customer_id
+WHERE orders.order_date > '2024-01-01' AND discounts.is_active = true;
+`;
+
+sql2 = "Delete from table where id='2'"
+ // Funktion zum direkten Loggen in der Konsole
+ function parseSQL() {
+            const sql = document.getElementById('sqlInput').value;
+            const results = getInputAndOutputTablesForMultiple(sql);
+
+            results.forEach((result, index) => {
+                console.log(`STATEMENT ${index + 1}`);
+                console.log("INPUT: " + (result.inputTables.join(', ') || "Nicht gefunden"));
+                console.log("OUTPUT: " + result.outputTable);
+            });
+        }
+       
+    </script>
+</body>
+</html>
+
+<script src="detectSQLInputOutput.js"></script>
