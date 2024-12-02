@@ -1,72 +1,66 @@
 function splitStatements(sql) {
-    // Entferne Zeilenumbrüche und normalisiere die SQL-Anweisung
-    const normalizedSQL = sql.replace(/\n/g, " ").trim();
+    const normalizedSQL = sql.replace(/\r\n|\n|\r/g, " ").trim();
 
-    // Aufteilen in Statements, aber WITH-Klauseln und INSERT INTO mit SELECT korrekt zusammenhalten
+    // Aufteilen in Statements, aber komplexe Anweisungen wie UPDATE mit FROM korrekt behandeln
     const statements = [];
-    const regex = /(WITH.*?SELECT.*?FROM.*?(ORDER BY|GROUP BY|LIMIT|;|$)|INSERT\s+INTO\s+\w+\s+SELECT.*?FROM.*?(ORDER BY|GROUP BY|LIMIT|;|$)|(?:UPDATE|DELETE|SELECT).*?(?=(WITH|UPDATE|INSERT|DELETE|SELECT|$)))/gis;
+    const regex = /(WITH\s+.*?;)|(INSERT\s+INTO\s+\[?[a-zA-Z0-9_.\[\]]+\]?\s+SELECT.*?;)|(UPDATE\s+\[?[a-zA-Z0-9_.\[\]]+\]?.*?;)|(DELETE.*?;)|(SELECT.*?;)/gis;
     let match;
 
-    while ((match = regex.exec(normalizedSQL)) !== null) {
-        statements.push(match[0].trim());
+    while ((match = regex.exec(normalizedSQL + ';')) !== null) {
+        if (match[0]) {
+            statements.push(match[0].trim().replace(/;$/, ''));
+        }
     }
 
-    return statements;
+    return statements.length > 0 ? statements : [normalizedSQL];
 }
-
 
 function analyzeStatement(statement) {
     let outputTable = "Nicht gefunden";
     let inputTables = [];
+    const cteTables = new Map(); // Map für CTE-Namen und zugrunde liegende Tabellen
 
     // Erkennung von WITH-Klauseln (CTE)
-    const withMatches = [...statement.matchAll(/WITH\s+\w+\s+AS\s+\(\s*SELECT.*FROM\s+(\w+)/gi)];
-    if (withMatches.length > 0) {
-        withMatches.forEach(match => inputTables.push(match[1]));
-    }
-
-    // Nachfolgendes SELECT in einer CTE
-    const cteSelectMatch = statement.match(/FROM\s+(\w+)/gi);
-    if (cteSelectMatch) {
-        cteSelectMatch.forEach(match => {
-            const tableMatch = match.match(/FROM\s+(\w+)/i);
-            if (tableMatch && !inputTables.includes(tableMatch[1])) {
-                inputTables.push(tableMatch[1]);
-            }
-        });
-    }
-
-    // Erkennung von INSERT INTO
-    const insertMatch = statement.match(/INSERT\s+INTO\s+(\w+)/i);
-    if (insertMatch) {
-        outputTable = insertMatch[1];
-        const selectMatch = statement.match(/SELECT.*FROM\s+(\w+)/i);
-        if (selectMatch) {
-            inputTables.push(selectMatch[1]);
-        }
+    const cteRegex = /WITH\s+(\w+)\s+AS\s*\(\s*SELECT[\s\S]+?FROM\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*).*?\)/gi;
+    let cteMatch;
+    while ((cteMatch = cteRegex.exec(statement)) !== null) {
+        const cteName = cteMatch[1];
+        const underlyingTable = cteMatch[2];
+        cteTables.set(cteName, underlyingTable);
+        inputTables.push(underlyingTable);
     }
 
     // Erkennung von UPDATE
-    const updateMatch = statement.match(/UPDATE\s+(\w+)/i);
+    const updateMatch = statement.match(/UPDATE\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*)(\s|\()/i);
     if (updateMatch) {
         outputTable = updateMatch[1];
     }
 
-    // Erkennung von DELETE
-    const deleteMatch = statement.match(/DELETE\s+FROM\s+(\w+)/i);
-    if (deleteMatch) {
-        outputTable = deleteMatch[1];
+    // Tabellen aus FROM und JOIN-Klauseln sammeln
+    const tableRegex = /(?:FROM|JOIN)\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*)(?:\s+AS)?/gi;
+    let tableMatch;
+    while ((tableMatch = tableRegex.exec(statement)) !== null) {
+        let tableName = tableMatch[1];
+        if (cteTables.has(tableName)) {
+            // Ersetzen von CTE durch zugrunde liegende Tabelle
+            tableName = cteTables.get(tableName);
+        }
+        if (!inputTables.includes(tableName)) {
+            inputTables.push(tableName);
+        }
     }
 
-    // Erkennung von einfachem SELECT
-    const selectMatch = statement.match(/SELECT.*FROM\s+(\w+)/i);
-    if (selectMatch && outputTable === "Nicht gefunden") {
-        inputTables.push(selectMatch[1]);
+    // Entferne die Output-Tabelle aus den Input-Tabellen, falls vorhanden
+    if (outputTable && inputTables.includes(outputTable)) {
+        inputTables = inputTables.filter(table => table !== outputTable);
     }
+
+    // Deduplizieren der Input-Tabellen
+    inputTables = [...new Set(inputTables)];
 
     return {
         statement: statement.trim(),
-        inputTables: [...new Set(inputTables)],
+        inputTables: inputTables,
         outputTable: outputTable,
     };
 }
