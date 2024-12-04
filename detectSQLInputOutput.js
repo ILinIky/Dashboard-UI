@@ -1,18 +1,23 @@
 function splitStatements(sql) {
+    // Entferne Zeilenumbrüche und normalisiere die SQL-Anweisung
     const normalizedSQL = sql.replace(/\r\n|\n|\r/g, " ").trim();
 
-    // Aufteilen in Statements, aber komplexe Anweisungen wie UPDATE mit FROM korrekt behandeln
+    // Regex zur Erkennung von neuen Statements basierend auf Schlüsselwörtern
+    const regex = /(WITH\s+.*?AS\s*\(.*?\)\s*(?=INSERT|UPDATE|DELETE|SELECT|WITH|$)|INSERT\s+INTO\s+.*?(?=WITH|INSERT|UPDATE|DELETE|SELECT|$)|UPDATE\s+.*?(?=WITH|INSERT|UPDATE|DELETE|SELECT|$)|DELETE\s+.*?(?=WITH|INSERT|UPDATE|DELETE|SELECT|$)|SELECT\s+.*?(?=WITH|INSERT|UPDATE|DELETE|SELECT|$))/gis;
+
     const statements = [];
-    const regex = /(WITH\s+.*?;)|(INSERT\s+INTO\s+\[?[a-zA-Z0-9_.\[\]]+\]?\s+SELECT.*?;)|(UPDATE\s+\[?[a-zA-Z0-9_.\[\]]+\]?.*?;)|(DELETE.*?;)|(SELECT.*?;)/gis;
     let match;
 
-    while ((match = regex.exec(normalizedSQL + ';')) !== null) {
-        if (match[0]) {
-            statements.push(match[0].trim().replace(/;$/, ''));
-        }
+    while ((match = regex.exec(normalizedSQL)) !== null) {
+        statements.push(match[0].trim());
     }
 
-    return statements.length > 0 ? statements : [normalizedSQL];
+    // Falls keine Statements gefunden wurden, gesamten SQL-Text als ein Statement behandeln
+    if (statements.length === 0 && normalizedSQL.length > 0) {
+        statements.push(normalizedSQL);
+    }
+
+    return statements;
 }
 
 function analyzeStatement(statement) {
@@ -21,7 +26,7 @@ function analyzeStatement(statement) {
     const cteTables = new Map(); // Map für CTE-Namen und zugrunde liegende Tabellen
 
     // Erkennung von WITH-Klauseln (CTE)
-    const cteRegex = /WITH\s+(\w+)\s+AS\s*\(\s*SELECT[\s\S]+?FROM\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*).*?\)/gi;
+    const cteRegex = /WITH\s+(\w+)\s+AS\s*\(\s*SELECT[\s\S]*?FROM\s+([\[\]a-zA-Z0-9_.]+).*?\)/gi;
     let cteMatch;
     while ((cteMatch = cteRegex.exec(statement)) !== null) {
         const cteName = cteMatch[1];
@@ -30,29 +35,30 @@ function analyzeStatement(statement) {
         inputTables.push(underlyingTable);
     }
 
+    // Erkennung von INSERT INTO
+    const insertMatch = statement.match(/INSERT\s+INTO\s+([\[\]a-zA-Z0-9_.]+)/i);
+    if (insertMatch) {
+        outputTable = insertMatch[1];
+    }
+
     // Erkennung von UPDATE
-    const updateMatch = statement.match(/UPDATE\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*)(\s|\()/i);
+    const updateMatch = statement.match(/UPDATE\s+([\[\]a-zA-Z0-9_.]+)/i);
     if (updateMatch) {
         outputTable = updateMatch[1];
     }
 
     // Tabellen aus FROM und JOIN-Klauseln sammeln
-    const tableRegex = /(?:FROM|JOIN)\s+(\[?[^\]\s]+\]?(?:\.\[?[^\]\s]+\]?)*(?:\.\[?[^\]\s]+\]?)*)(?:\s+AS)?/gi;
+    const tableRegex = /(?:FROM|JOIN)\s+([\[\]a-zA-Z0-9_.]+)/gi;
     let tableMatch;
     while ((tableMatch = tableRegex.exec(statement)) !== null) {
         let tableName = tableMatch[1];
         if (cteTables.has(tableName)) {
-            // Ersetzen von CTE durch zugrunde liegende Tabelle
+            // Ersetzen des CTE-Namens durch die zugrunde liegende Tabelle
             tableName = cteTables.get(tableName);
         }
-        if (!inputTables.includes(tableName)) {
+        if (tableName !== outputTable && !inputTables.includes(tableName)) {
             inputTables.push(tableName);
         }
-    }
-
-    // Entferne die Output-Tabelle aus den Input-Tabellen, falls vorhanden
-    if (outputTable && inputTables.includes(outputTable)) {
-        inputTables = inputTables.filter(table => table !== outputTable);
     }
 
     // Deduplizieren der Input-Tabellen
@@ -66,8 +72,8 @@ function analyzeStatement(statement) {
 }
 
 function getInputAndOutputTablesForMultiple(sql) {
-    const statements = splitStatements(sql); // Statements aufteilen
-    return statements.map(analyzeStatement); // Jedes Statement analysieren
+    const statements = splitStatements(sql);
+    return statements.map(analyzeStatement);
 }
 
 function parseSQL() {
