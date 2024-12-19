@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Context menu with Feather icons</title>
+<link rel="stylesheet" href="contextmenu/contextmenu.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="containerMenu">
+  <!-- code here -->
+  <div class="menu">
+    <ul class="menu-list">
+      <li class="menu-item"><button class="menu-button"><i data-feather="folder"></i>Dataflow</button></li>
+    </ul>
+    <ul class="menu-list">
+      <li class="menu-item"><button class="menu-button"><i data-feather="corner-up-right"></i>OPEN</button></li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="edit-2"></i>Analyse</button></li>
+    </ul>
+    <ul class="menu-list">
+      <li class="menu-item"><button class="menu-button menu-button--black"><i data-feather="circle"></i>Cubes<i data-feather="chevron-right"></i></button>
+      <ul class="menu-sub-list">
+        <li class="menu-item"><button class="menu-button menu-button--orange"><i data-feather="square"></i>Needs review</button></li>
+                <li class="menu-item"><button class="menu-button menu-button--purple"><i data-feather="octagon"></i>In progress</button></li>
+                <li class="menu-item"><button class="menu-button menu-button--green"><i data-feather="triangle"></i>Approved</button></li>
+                <li class="menu-item"><button class="menu-button menu-button--black menu-button--checked"><i data-feather="circle"></i>No status<i data-feather="check"></i></button></li>
+      </ul>
+      </li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="link"></i>Copy Link Address</button></li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="tool"></i>SQL Select Statement</button></li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="copy"></i>Search Cube</button></li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="lock"></i>Search SQL Table</button></li>
+      <li class="menu-item"><button class="menu-button"><i data-feather="download"></i>Download</button></li>
+    </ul>
+    <ul class="menu-list">
+      <li class="menu-item"><button class="menu-button menu-button--delete"><i data-feather="trash-2"></i>Delete</button></li>
+    </ul>
+  </div>
+</div>
+<!-- partial -->
+  <script src='https://unpkg.com/feather-icons'></script><script  src="./contextmenu.js"></script>
+
+</body>
+</html>
+  
