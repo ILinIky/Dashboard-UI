@@ -1,0 +1,14 @@
+select count(*) from users2;
+select count(*) from users;
+
+CREATE TABLE IF NOT EXISTS users2 (id INTEGER PRIMARY KEY, name TEXT, age INTEGER);
+
+
+INSERT INTO users (name, age) VALUES ('Chris', 35);
+INSERT INTO users2 (name, age) VALUES ('Chris', 40);
+
+SELECT * 
+FROM users a 
+JOIN users2 b 
+ON a.name = b.name
+WHERE a.name = 'Chris';

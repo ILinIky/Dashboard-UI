@@ -9,6 +9,7 @@
   <link href="https://assets.codepen.io/344846/style.css" rel="stylesheet"><link rel="stylesheet" href="./style.css">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css" rel="stylesheet" />
   <link rel="stylesheet" href="./popup.css">
+  <link rel="stylesheet" href="./tooltip.css">
 
 </head>
 <body>
@@ -225,13 +226,19 @@
                 
                 <td class="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
                   
-                  <div class="flex items-center" style="margin-left: 50px;">
+                  <div class="flex items-center">
                     
-                    <svg viewBox="0 0 24 24" class="w-4 mr-5 text-yellow-500" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="12" y1="8" x2="12" y2="12"></line>
-                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                    </svg>
+                    <div class="tooltip-container" data-tooltip="Selection: DMP COMPONENTS: 432 + Area Description: Su-Area,Dach,Germany + Products: Cybertech, IONTEC">
+                      <div style="position: relative !important;">
+                      <svg viewBox="0 0 24 24" class="w-4 mr-5 text-yellow-500" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" style="position: relative !important;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                    </div>
+                  </div>
+                    
+                  
                     Dataflow
                   </div>
                 </td>

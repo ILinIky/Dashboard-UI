@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuContainer = document.createElement('div');
   document.body.appendChild(menuContainer);
 
+  let lastClickedElement = null; // Speichert das zuletzt angeklickte Element
+
   // Menü aus der HTML-Datei laden
   fetch('contextmenu/menu.html')
     .then(response => response.text())
@@ -22,7 +24,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let topPosition = mouseY - menuHeight;
 
 
+ // Suche nach der übergeordneten searchline
+ const searchline = event.target.closest('.searchline');
 
+ if (searchline) {
+   // Letztes Element zurücksetzen
+   if (lastClickedElement) {
+     lastClickedElement.classList.remove('clicked');
+   }
+
+   // Aktuelles searchline-Element markieren
+   lastClickedElement = searchline;
+   lastClickedElement.classList.add('clicked'); // Fügt die Klasse hinzu
+ }
 
         // Positioniere das Menü oberhalb des Mauszeigers
         menu.style.top = `${mouseY - menuHeight}px`; // Oberhalb der Maus
@@ -44,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Klick außerhalb schließt das Menü
       document.addEventListener('click', () => {
+        lastClickedElement.classList.remove('clicked');
         menu.style.opacity = '0';
         menu.style.pointerEvents = 'none';
       });

@@ -56,6 +56,13 @@
   transition: background-color 0.3s ease; /* Sanfter Übergang */
 }
 
+
+.clicked
+{
+  background-color: rgba(154, 196, 208, 0.5); /* Halb-transparenter Hintergrund */
+  transition: background-color 0.3s ease; /* Sanfter Übergang */
+}
+
 .rounded-md:hover {
   background-color: #f5f5f5 !important; /* Heller grauer Hintergrund */
   transition: background-color 0.3s ease !important; /* Sanfter Übergang */

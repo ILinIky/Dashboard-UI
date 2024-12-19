@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Commands im Browser</title>
+</head>
+<body>
+    <h1>SQL Commands im Browser</h1>
+    <textarea id="sqlInput" rows="5" cols="50" placeholder="Gib hier deinen SQL-Befehl ein..."></textarea>
+<br>
+<button id="executeSQL">SQL ausführen</button>
+<button id="saveDb">Datenbank speichern</button>
+<input type="file" id="loadDb" />
+
+<div id="output"></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
