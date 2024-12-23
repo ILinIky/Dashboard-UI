@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Embed Loading Spinner</title>
+  <style>
+  
+
+    iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none; /* Entfernt Rahmen um das iframe */
+      z-index: 9999; /* Über andere Inhalte legen */
+      background-color: #343541;
+      transition: opacity 1s ease-in-out; /* Animation für das Ausblenden */
+      opacity: 1; /* Startwert für Sichtbarkeit */
+    }
+
+    iframe.fade-out {
+      opacity: 0; /* Zielwert für Ausblenden */
+    }
+  </style>
+</head>
+<body>
+  <!-- iframe lädt die index.html -->
+  <iframe id="loadingIframe" src="index.html"></iframe>
+
+  <script>
+    // Funktion, die das iframe nach 3 Sekunden entfernt
+    setTimeout(() => {
+      const iframe = document.getElementById('loadingIframe');
+      if (iframe) {
+        iframe.classList.add('fade-out'); // Fade-Out-Klasse hinzufügen
+        setTimeout(() => {
+          iframe.remove(); // iframe aus dem DOM entfernen
+          console.log("iframe wurde entfernt.");
+        }, 1000); // Warten, bis die Fade-Out-Animation abgeschlossen ist
+      }
+    }, 3000); // 3000 Millisekunden = 3 Sekunden
+  </script>
+</body>
+</html>

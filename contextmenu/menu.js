@@ -11,12 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
       menuContainer.innerHTML = data;
       const menu = document.querySelector('.menu');
 
-      // Initiale Stile für das Menü
-      menu.style.opacity = '0';
-      menu.style.pointerEvents = 'none';
+     // Initiale Stile für das Menü
+     menu.style.position = 'absolute';
+     menu.style.opacity = '0';
+     menu.style.pointerEvents = 'none';
+     menu.style.top = '-9999px'; // Position außerhalb des sichtbaren Bereichs
+     menu.style.left = '-9999px'; // Position außerhalb des sichtbaren Bereichs
+      
+      
 
       // Rechtsklick-Event
       document.addEventListener('contextmenu', (event) => {
+       
         event.preventDefault();
 
         const { clientX: mouseX, clientY: mouseY } = event;

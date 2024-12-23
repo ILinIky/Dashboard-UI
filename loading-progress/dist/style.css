@@ -1,0 +1,157 @@
+* {
+  border: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --hue: 223;
+  --bg: hsl(var(--hue),10%,90%);
+  --fg: hsl(var(--hue),10%,10%);
+  --gray1: hsl(var(--hue),10%,60%);
+  --gray2: hsl(var(--hue),10%,40%);
+  --neutral: hsl(var(--hue),10%,50%);
+  --success: hsl(153,90%,35%);
+  --warning: hsl(33,90%,50%);
+  --trans-dur: 0.3s;
+  --trans-timing: cubic-bezier(0.65,0,0.35,1);
+  font-size: clamp(1rem,0.95rem + 0.25vw,1.25rem);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  display: flex;
+  font: 1em/1.5 "DM Sans", sans-serif;
+  height: 100vh;
+  transition: background-color var(--trans-dur), color var(--trans-dur);
+}
+
+main {
+  display: flex;
+  width: 100vh;
+  height: 90vh;
+  margin-top: -15%;
+}
+
+svg polyline {
+  transition: stroke var(--trans-dur);
+}
+
+.icon {
+  display: block;
+  overflow: visible;
+  width: 1.5em;
+  height: 1.5em;
+  transition: color var(--trans-dur);
+}
+.icon--neutral {
+  color: var(--neutral);
+}
+.icon--success {
+  color: var(--success);
+}
+.icon--warning {
+  color: var(--warning);
+}
+
+.loading {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+}
+.loading--done {
+  overflow: visible;
+  height: 26.25em;
+}
+.loading, .loading__step, .loading__steps {
+  width: 100%;
+}
+.loading, .loading__steps {
+  margin: auto;
+}
+.loading, .loading__step {
+  display: flex;
+}
+.loading__ellipsis {
+  display: inline-flex;
+}
+.loading__ellipsis-dot {
+  --dot-dur: 2s;
+  animation: ellipsis-dot-1 var(--dot-dur) steps(1, end) infinite;
+  visibility: hidden;
+}
+.loading__ellipsis-dot:nth-child(2) {
+  animation-name: ellipsis-dot-2;
+}
+.loading__ellipsis-dot:nth-child(3) {
+  animation-name: ellipsis-dot-3;
+}
+.loading__step {
+  gap: 1em;
+  padding: 0 1.5em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5.25em;
+  transition: opacity var(--trans-dur), transform var(--trans-dur) var(--trans-timing);
+}
+.loading__step-info {
+  color: var(--gray2);
+  font-size: 0.75em;
+  line-height: 1.333;
+  opacity: 0;
+  transition: color var(--trans-dur), opacity var(--trans-dur);
+}
+.loading__step--in .loading__step-info {
+  opacity: 1;
+}
+.loading__step-title {
+  font-size: 1.25em;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+.loading__steps {
+  position: relative;
+  height: 2.75em;
+  max-width: 27em;
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: hsl(var(--hue),10%,10%);
+    --fg: hsl(var(--hue),10%,90%);
+  }
+
+  .loading__step-info {
+    color: var(--gray1);
+  }
+}
+/* Animations */
+@keyframes ellipsis-dot-1 {
+  from {
+    visibility: hidden;
+  }
+  25%, to {
+    visibility: visible;
+  }
+}
+@keyframes ellipsis-dot-2 {
+  from, 25% {
+    visibility: hidden;
+  }
+  50%, to {
+    visibility: visible;
+  }
+}
+@keyframes ellipsis-dot-3 {
+  from, 50% {
+    visibility: hidden;
+  }
+  75%, to {
+    visibility: visible;
+  }
+}

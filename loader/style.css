@@ -1,0 +1,98 @@
+@-webkit-keyframes expand {
+	0% {
+	  z-index: 2;
+	  transform: scale(0);
+	}
+	50% {
+	  z-index: 1;
+	  transform: scale(1);
+	}
+	100% {
+	  z-index: 0;
+	}
+  }
+  @keyframes expand {
+	0% {
+	  z-index: 2;
+	  transform: scale(0);
+	}
+	50% {
+	  z-index: 1;
+	  transform: scale(1);
+	}
+	100% {
+	  z-index: 0;
+	}
+  }
+  :root {
+	--background-color: #343541; /* Moderner Schwarzton */
+	--text-color: #d1d5db; /* Leichtes Grau für den Text */
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column; /* Elemente vertikal stapeln */
+	background-color: var(--background-color); /* Moderner Schwarzton */
+	color: var(--text-color); /* Standard-Textfarbe */
+	font-family: 'Arial', sans-serif;
+}
+  .loader {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -20px 0 0 -20px;
+	width: 38px;
+	height: 38px;
+	background-color: white;
+	border-radius: 50%;
+	box-shadow: 0 0 0 6.6666666667px #141414;
+  }
+  .loader::before, .loader::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	display: block;
+	margin: -20px 0 0 -20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	transform: translate3d(0, 0, 0);
+  }
+  .loader::before {
+	background-color: #181818;
+	-webkit-animation: expand 1.6s ease-out infinite both;
+			animation: expand 1.6s ease-out infinite both;
+  }
+  .loader::after {
+	background-color: rgb(223, 218, 218);
+	-webkit-animation: expand 1.6s ease-out 0.8s infinite both;
+			animation: expand 1.6s ease-out 0.8s infinite both;
+  }
+
+  .messageText {
+	text-align: center;
+	font-size: 1.0rem;
+	color: var(--text-color); /* Gleiche Textfarbe wie ChatGPT */
+	font-family: 'Arial', sans-serif;
+	margin-top: 45px; /* Geringer Abstand für bessere Ausrichtung */
+    z-index: 10000; /* Über dem iframe */
+}
+
+.loading-text {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 0.5rem;
+	color: #d1d5db;
+	font-family: 'Arial', sans-serif;
+	text-align: center;
+	z-index: 10000; /* Über dem iframe */
+  }

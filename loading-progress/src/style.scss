@@ -1,0 +1,176 @@
+* {
+	border: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+:root {
+	--hue: 223;
+	--bg: hsl(var(--hue),10%,90%);
+	--fg: hsl(var(--hue),10%,10%);
+	--gray1: hsl(var(--hue),10%,60%);
+	--gray2: hsl(var(--hue),10%,40%);
+	--neutral: hsl(var(--hue),10%,50%);
+	--success: hsl(153,90%,35%);
+	--warning: hsl(33,90%,50%);
+	--trans-dur: 0.3s;
+	--trans-timing: cubic-bezier(0.65,0,0.35,1);
+	font-size: clamp(1rem,0.95rem + 0.25vw,1.25rem);
+}
+body {
+	background-color: var(--bg);
+	color: var(--fg);
+	display: flex;
+	font: 1em/1.5 "DM Sans", sans-serif;
+	height: 100vh;
+	transition:
+		background-color var(--trans-dur),
+		color var(--trans-dur);
+}
+main {
+	display: flex;
+	overflow-x: hidden;
+	width: 100vw;
+	height: 100vh;
+}
+svg {
+	polyline {
+		transition: stroke var(--trans-dur);
+	}
+}
+.icon {
+	display: block;
+	overflow: visible;
+	width: 1.5em;
+	height: 1.5em;
+	transition: color var(--trans-dur);
+
+	&--neutral {
+		color: var(--neutral);
+	}
+	&--success {
+		color: var(--success);
+	}
+	&--warning {
+		color: var(--warning);
+	}
+}
+.loading {
+	display: flex;
+	overflow: hidden;
+	height: 100%;
+
+	&--done {
+		overflow: visible;
+		height: 26.25em;
+	}
+	&,
+	&__step,
+	&__steps {
+		width: 100%;
+	}
+	&,
+	&__steps {
+		margin: auto;
+	}
+	&,
+	&__step {
+		display: flex;
+	}
+	&__ellipsis {
+		display: inline-flex;
+
+		&-dot {
+			--dot-dur: 2s;
+			animation: ellipsis-dot-1 var(--dot-dur) steps(1,end) infinite;
+			visibility: hidden;
+
+			@for $d from 2 through 3 {
+				&:nth-child(#{$d}) {
+					animation-name: ellipsis-dot-#{$d};
+				}
+			}
+		}
+	}
+	&__step {
+		gap: 1em;
+		padding: 0 1.5em;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 5.25em;
+		transition:
+			opacity var(--trans-dur),
+			transform var(--trans-dur) var(--trans-timing);
+
+		&-info {
+			color: var(--gray2);
+			font-size: 0.75em;
+			line-height: 1.333;
+			opacity: 0;
+			transition:
+				color var(--trans-dur),
+				opacity var(--trans-dur);
+		}
+		&--in &-info {
+			opacity: 1;
+		}
+		&-title {
+			font-size: 1.25em;
+			font-weight: 500;
+			line-height: 1.2;
+			margin-bottom: 0.25rem;
+		}
+	}
+	&__steps {
+		position: relative;
+		height: 2.75em;
+		max-width: 27em;
+	}
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: hsl(var(--hue),10%,10%);
+		--fg: hsl(var(--hue),10%,90%);
+	}
+	.loading {
+		&__step {
+			&-info {
+				color: var(--gray1);
+			}
+		}
+	}
+}
+
+/* Animations */
+@keyframes ellipsis-dot-1 {
+	from {
+		visibility: hidden;
+	}
+	25%,
+	to {
+		visibility: visible;
+	}
+}
+@keyframes ellipsis-dot-2 {
+	from,
+	25% {
+		visibility: hidden;
+	}
+	50%,
+	to {
+		visibility: visible;
+	}
+}
+@keyframes ellipsis-dot-3 {
+	from,
+	50% {
+		visibility: hidden;
+	}
+	75%,
+	to {
+		visibility: visible;
+	}
+}

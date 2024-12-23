@@ -1,13 +1,23 @@
 .tooltip-container {
-    position:relative; /* Required for positioning the tooltip */
+    /*position: relative; /* Required for positioning the tooltip */
     display: inline-block;
     cursor: pointer;
-    z-index: 99999;
+    
     
   }
 
+  .tooltip-container:hover
+  {
+    position: relative; /* Required for positioning the tooltip */
+    z-index: 9999;
+    
+  }
 
-  
+  .tooltip-container svg {
+    display: block !important;
+    position: inherit !important;
+  }
+
   .tooltip-container::after {
     content: attr(data-tooltip); /* Use the text from data-tooltip */
     position: absolute;
@@ -18,9 +28,9 @@
     color: #fff; /* White text for contrast */
     padding: 8px 12px;
     border-radius: 8px;
-    z-index: 9999;
+   
     font-size: 0.875rem; /* Slightly smaller text */
-    white-space: pre-warp;
+    white-space: pre-line;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     opacity: 0; /* Hidden by default */
     pointer-events: none; /* Prevent mouse interaction */
@@ -28,6 +38,7 @@
   }
   
   .tooltip-container:hover::after {
+    
     opacity: 1; /* Show tooltip on hover */
     transform: translateX(-50%) translateY(-4px); /* Slight upward animation */
   }

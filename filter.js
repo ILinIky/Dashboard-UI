@@ -31,7 +31,7 @@ filterInput.addEventListener('input', () => {
 
 
 const typeSearchInput = document.querySelector('.filter-inputtypesearch');
-const rows = document.querySelectorAll('.searchline');
+let rows = document.querySelectorAll('.searchline');
 
 typeSearchInput.addEventListener('input', () => {
  
@@ -49,13 +49,13 @@ typeSearchInput.addEventListener('input', () => {
 });
 
 const typeSearchInput2 = document.querySelector('.filter-inputwhere');
-const rows2 = document.querySelectorAll('.searchline');
+
 
 typeSearchInput2.addEventListener('input', () => {
  
   const searchText = typeSearchInput2.value.toLowerCase();
 
-  rows2.forEach(row => {
+  rows.forEach(row => {
     const secondWord = row.querySelectorAll('td')[1]?.textContent.trim().toLowerCase();
 
     if (secondWord.includes(searchText)) {
@@ -65,3 +65,49 @@ typeSearchInput2.addEventListener('input', () => {
     }
   });
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const filterButton = document.getElementById("filter-button");
+  const filterDropdown = document.getElementById("filter-dropdown");
+  const filterOptions = filterDropdown.querySelectorAll("a");
+
+  // Toggle dropdown visibility
+  filterButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    filterDropdown.classList.toggle("hidden");
+  });
+
+  // Handle filter selection
+  filterOptions.forEach(option => {
+    option.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      // Update button text with the selected filter
+      const selectedFilter = event.target.dataset.filter;
+      filterButton.innerHTML = `
+        <svg viewBox="0 0 24 24" class="w-4 mr-2 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        ${selectedFilter}
+        <svg viewBox="0 0 24 24" class="w-4 ml-1.5 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      `;
+
+      // Close dropdown
+      filterDropdown.classList.add("hidden");
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (event) => {
+    if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+      filterDropdown.classList.add("hidden");
+    }
+  });
+});
+

@@ -10,10 +10,16 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css" rel="stylesheet" />
   <link rel="stylesheet" href="./popup.css">
   <link rel="stylesheet" href="./tooltip.css">
+  <link rel="stylesheet" href="./filter.css">
+
 
 </head>
 <body>
-
+<!-- iframe lädt die index.html -->
+<!-- iframe lädt die index.html -->
+<iframe id="loadingIframe" src="loader/index.html"></iframe>
+<!-- Dynamischer Text -->
+<div id="loadingText" class="loading-text">loading database...</div>
    <!-- Menü wird hier geladen -->
    <div id="menu-container"></div>
 
@@ -23,18 +29,17 @@
 <div class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-600 h-screen flex overflow-hidden text-sm">
   <div class="bg-white dark:bg-gray-900 dark:border-gray-800 w-20 flex-shrink-0 border-r border-gray-200 flex-col hidden sm:flex">
     <div class="h-16 text-blue-500 flex items-center justify-center">
-      <svg class="w-9" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 54 33">
-        <path fill="currentColor" fill-rule="evenodd" d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z" clip-rule="evenodd" />
-      </svg>
+      <img class="w-16" src="./logo.png" alt="BStats Logo">
+
     </div>
     <div class="flex mx-auto flex-grow mt-4 flex-col text-gray-400 space-y-4">
-      <button class="h-10 w-12 dark:text-gray-500 rounded-md flex items-center justify-center">
+      <button class="h-10 w-12 dark:text-gray-500 rounded-md flex items-center justify-center bg-blue-100 text-blue-500">
         <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
       </button>
-      <button class="h-10 w-12 dark:bg-gray-700 dark:text-white rounded-md flex items-center justify-center bg-blue-100 text-blue-500">
+      <button class="h-10 w-12 dark:bg-gray-700 dark:text-white rounded-md flex items-center justify-center">
         <svg viewBox="0 0 24 24" class="h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
           <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -60,13 +65,14 @@
   <div class="flex-grow overflow-hidden h-full flex flex-col">
     <div class="h-16 lg:flex w-full border-b border-gray-200 dark:border-gray-800 hidden px-10">
       <div class="flex h-full text-gray-600 dark:text-gray-400">
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Company</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white inline-flex mr-8 items-center">Users</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Expense Centres</a>
-        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center">Currency Exchange</a>
+        <a href="#" class="cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Database:</a>
+        <a href="#" class="DatabaseMenu cursor-pointer h-full border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white inline-flex mr-8 items-center">Users</a>
+        <a href="#" class="DatabaseMenu cursor-pointer h-full border-b-2 border-transparent inline-flex items-center mr-8">Expense Centres</a>
+        <a href="#" class="DatabaseMenu cursor-pointer h-full border-b-2 border-transparent inline-flex items-center">Currency Exchange</a>
       </div>
       <div class="ml-auto flex items-center space-x-7">
-        <button class="h-8 px-3 rounded-md shadow text-white bg-blue-500">Deposit</button>
+        <button id="testbutton" class="h-8 px-3 rounded-md shadow text-white bg-blue-500">ADD ELEMENTS</button>
+        <button id="testbutton2" class="h-8 px-3 rounded-md shadow text-white bg-blue-500">TEST2</button>
 
         <button class="flex items-center">
           <span class="relative flex-shrink-0">
@@ -142,10 +148,51 @@
               <div class="ml-auto text-xs text-gray-400">$0.00</div>
             </div>
           </button>
+          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
+            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
+              <img src="https://images.unsplash.com/photo-1507120878965-54b2d3939100?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=99fbace66d1bfa48c9c6dc8afcac3aab" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
+              Ronald Richards
+            </div>
+            <div class="flex items-center w-full">
+              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-green-100 text-green-600 rounded-md">Sales</div>
+              <div class="ml-auto text-xs text-gray-400">$0.00</div>
+            </div>
+          </button>
+          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
+            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
+              <img src="https://images.unsplash.com/photo-1507120878965-54b2d3939100?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=99fbace66d1bfa48c9c6dc8afcac3aab" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
+              Ronald Richards
+            </div>
+            <div class="flex items-center w-full">
+              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-green-100 text-green-600 rounded-md">Sales</div>
+              <div class="ml-auto text-xs text-gray-400">$0.00</div>
+            </div>
+          </button>
+          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
+            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
+              <img src="https://images.unsplash.com/photo-1507120878965-54b2d3939100?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=99fbace66d1bfa48c9c6dc8afcac3aab" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
+              Ronald Richards
+            </div>
+            <div class="flex items-center w-full">
+              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-green-100 text-green-600 rounded-md">Sales</div>
+              <div class="ml-auto text-xs text-gray-400">$0.00</div>
+            </div>
+          </button>
+          <button class="bg-white p-3 w-full flex flex-col rounded-md dark:bg-gray-800 shadow">
+            <div class="flex xl:flex-row flex-col items-center font-medium text-gray-900 dark:text-white pb-2 mb-2 xl:border-b border-gray-200 border-opacity-75 dark:border-gray-700 w-full">
+              <img src="https://images.unsplash.com/photo-1507120878965-54b2d3939100?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=99fbace66d1bfa48c9c6dc8afcac3aab" class="w-7 h-7 mr-2 rounded-full" alt="profile" />
+              Ronald Richards
+            </div>
+            <div class="flex items-center w-full">
+              <div class="text-xs py-1 px-2 leading-none dark:bg-gray-900 bg-green-100 text-green-600 rounded-md">Sales</div>
+              <div class="ml-auto text-xs text-gray-400">$0.00</div>
+            </div>
+          </button>
         </div>
       </div>
       </div>
-      <div class="flex-grow bg-white dark:bg-gray-900 overflow-y-auto">
+     
+      <div class="flex-grow bg-white dark:bg-gray-900  overflow-y-auto">
         <div class="sm:px-7 sm:pt-7 px-4 pt-4 flex flex-col w-full border-b border-gray-200 bg-white dark:bg-gray-900 dark:text-white dark:border-gray-800 sticky top-0">
           <div class="flex w-full items-center">
             <div class="flex items-center text-3xl text-gray-900 dark:text-white">
@@ -166,28 +213,49 @@
               </button>
             </div>
           </div>
+  
+          <div class="sticky top-0 z-20">
+           
           <div class="flex items-center space-x-3 sm:mt-7 mt-4">
-            <a href="#" class="px-3 border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white pb-1.5">Activities</a>
-            <a href="#" class="px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5">Cubes</a>
-            <a href="#" class="px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5 sm:block hidden">Sql Dataflow</a>
-            <a href="#" class="px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5 sm:block hidden">Notifications</a>
-            <a href="#" class="px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5 sm:block hidden">Cards</a>
+            <a href="#" class="ActionMenu px-3 border-b-2 border-blue-500 text-blue-500 dark:text-white dark:border-white pb-1.5">Activities</a>
+            <a href="#" class="ActionMenu px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5">Cubes</a>
+            <a href="#" class="ActionMenu px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5">DataReader</a>
+            <a href="#" class="ActionMenu px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5">SQL Flows</a>
+            <a href="#" class="ActionMenu px-3 border-b-2 border-transparent text-gray-600 dark:text-gray-400 pb-1.5">Analyser</a>
           </div>
         </div>
+        <div class="hidemenu"> 
         <div class="sm:p-7 p-4">
           <div class="flex w-full items-center mb-7">
-            <button class="inline-flex mr-3 items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0">
-              <svg viewBox="0 0 24 24" class="w-4 mr-2 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              Last 30 days
-              <svg viewBox="0 0 24 24" class="w-4 ml-1.5 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
+          
+            <div class="relative inline-block">
+              <!-- Button -->
+              <button id="filter-button" class="inline-flex mr-3 items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0" style="width: 180px;">
+                <svg viewBox="0 0 24 24" class="w-4 mr-2 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Last 30 days
+                <svg viewBox="0 0 24 24" class="w-4 ml-1.5 text-gray-400 dark:text-gray-600" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+            
+              <!-- Dropdown -->
+              <div id="filter-dropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg hidden">
+                <ul class="py-1 text-sm text-gray-700 dark:text-gray-300">
+                  <li><a href="#" data-filter="Last 7 days" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Last 7 days</a></li>
+                  <li><a href="#" data-filter="Last 14 days" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Last 14 days</a></li>
+                  <li><a href="#" data-filter="Last 30 days" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Last 30 days</a></li>
+                  <li><a href="#" data-filter="This Month" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">This Month</a></li>
+                  <li><a href="#" data-filter="Last Month" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Last Month</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            
             <input type="text" id="typesearch "class="filter-inputtypesearch filter-inputstyle pl-8 h-9 bg-transparent border border-gray-300 dark:border-gray-700 dark:text-white w-full rounded-md text-sm" placeholder="Search" />
             <input type="text"  class="filter-inputwhere filter-inputstyle pl-8 h-9 bg-transparent border border-gray-300 dark:border-gray-700 dark:text-white w-full rounded-md text-sm" placeholder="Search" />
             <button class="inline-flex items-center h-8 pl-2.5 pr-2 rounded-md shadow text-gray-700 dark:text-gray-400 dark:border-gray-800 border border-gray-200 leading-none py-0">
@@ -210,33 +278,48 @@
               </button>
             </div>
           </div>
-          <table class="w-full text-left">
-            <thead>
-              <tr class="text-gray-400">
-                <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Type</th>
-                <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Where</th>
-                <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden md:table-cell">Description</th>
-                <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Amount</th>
-                <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">Date</th>
-              </tr>
-            </thead>
+         
+            </div>
+          </div>
+          <!-- Tabelle -->
+        </div>
+        <div id="loadinganalyser" class="hidemenu2">
+  <table id="contenttable" class="w-full text-left hidemenu">
+    <thead class="bg-gray-100 dark:bg-gray-800 hidemenu" >
+      <tr class="text-gray-400">
+      
+        <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800" >Type</th>
+        <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Where</th>
+        <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 hidden md:table-cell">Description</th>
+        <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800">Amount</th>
+        <th class="font-normal px-3 pt-0 pb-3 border-b border-gray-200 dark:border-gray-800 sm:text-gray-400 text-white">Date</th>
+      
+      </tr>
+    </thead>
+    <tbody class="text-gray-600 dark:text-gray-100 hidemenu">
             
-            <tbody class="text-gray-600 dark:text-gray-100">
+        
               <tr class="searchline">
                 
                 <td class="sm:p-3 py-2 px-1 border-b border-gray-200 dark:border-gray-800">
                   
                   <div class="flex items-center">
                     
-                    <div class="tooltip-container" data-tooltip="Selection: DMP COMPONENTS: 432 + Area Description: Su-Area,Dach,Germany + Products: Cybertech, IONTEC">
-                      <div style="position: relative !important;">
-                      <svg viewBox="0 0 24 24" class="w-4 mr-5 text-yellow-500" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" style="position: relative !important;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                      </svg>
-                    </div>
-                  </div>
+                    <div class="tooltip-container" data-tooltip="
+                    🔍 Selection: 
+                    DMP COMPONENTS: 432 
+                    
+                    ⚠️ Added Selection: Su.Area,Dach,Germany + Products: Cybertech, IONTEC">
+                      
+  <svg viewBox="0 0 24 24" class="w-4 mr-5 text-yellow-500" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  
+</div>
+
+                 
                     
                   
                     Dataflow
@@ -847,7 +930,8 @@
               </tr>
             </tbody>
           </table>
-          <div class="flex w-full mt-5 space-x-2 justify-end">
+        </div>
+          <div class="flex w-full mt-5 space-x-2 justify-end hidemenu">
             <button class="inline-flex items-center h-8 w-8 justify-center text-gray-400 rounded-md shadow border border-gray-200 dark:border-gray-800 leading-none">
               <svg class="w-4" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
@@ -874,7 +958,60 @@
  <div class="popup-overlay" id="popup">
   <div class="popup-content">
     <button class="close-btn" id="closePopup">&times;</button>
+    <b>SQL Command:</b>
     <pre><code id="sqlCode" class="language-sql">
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
+SELECT * 
+FROM users 
+WHERE status = 'active' 
+ORDER BY created_at DESC;
 SELECT * 
 FROM users 
 WHERE status = 'active' 
@@ -887,12 +1024,62 @@ ORDER BY created_at DESC;
 </body>
 </html>
 
+<script>
+  const messages = [
+    "loading database...",
+    "setting up variables...",
+    "loading cubes...",
+    "loading procedures..."
+  ];
+  let currentMessageIndex = 0;
+
+  const textElement = document.getElementById('loadingText');
+
+  // Funktion zum Wechseln der Texte mit Fade-Out und Fade-In
+  const changeText = () => {
+    if (currentMessageIndex < messages.length) {
+      // Fade-Out-Animation
+      textElement.classList.add('fade-out');
+
+      // Nach der Fade-Out-Animation den Text ändern und wieder einblenden
+      setTimeout(() => {
+        textElement.textContent = messages[currentMessageIndex];
+        currentMessageIndex++;
+        textElement.classList.remove('fade-out'); // Fade-In starten
+      }, 500); // Zeit für die Fade-Out-Animation (0.5s)
+    }
+  };
+
+  // Texte alle 1.5 Sekunden ändern
+  const interval = setInterval(changeText, 1500);
+
+  // Funktion, die iframe und Text nach 4 Sekunden entfernt
+  setTimeout(() => {
+    clearInterval(interval); // Stoppe den Textwechsel
+    const iframe = document.getElementById('loadingIframe');
+
+    if (iframe && textElement) {
+      iframe.classList.add('fade-out'); // Fade-Out für iframe
+      textElement.classList.add('fade-out'); // Fade-Out für Text
+      setTimeout(() => {
+        iframe.remove(); // iframe aus dem DOM entfernen
+        textElement.remove(); // Text aus dem DOM entfernen
+        console.log("iframe und Text wurden entfernt.");
+      }, 1000); // Warten, bis die Fade-Out-Animation abgeschlossen ist
+    }
+  }, 1000); // 8000 Millisekunden = 6 Sekunden
+</script>
+
+
+
 <script src="filter.js"></script>
 <script src="popup.js"></script>
+<script src="menuhandle.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="contextmenu/menu.js"></script>
+<script src="tables.js"></script>
 
 <script>
  

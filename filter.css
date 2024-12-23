@@ -1,0 +1,84 @@
+/* Dropdown-Button */
+#filter-button {
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  
+  #filter-button:hover {
+    background-color: #f3f4f6; /* Leichtes Grau */
+    border-color: #d1d5db; /* Dunkleres Grau */
+  }
+  
+  
+  /* Dropdown-Menü */
+  #filter-dropdown {
+    z-index: 10;
+    background-color: #ffffff; /* Weiß für helles Thema */
+    border-radius: 0.375rem; /* Abgerundete Ecken */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Weicher Schatten */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    animation: dropdown-fade-in 0.4s ease-in-out;
+    
+  }
+  
+  /* Dropdown sichtbar machen */
+  #filter-dropdown:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  
+  /* Dropdown-Links */
+  #filter-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+  }
+  
+  #filter-dropdown li a {
+    display: flex; /* Verwende Flexbox */
+    align-items: center; /* Vertikale Zentrierung */
+    justify-content: center; /* Horizontale Zentrierung */
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #374151; /* Dunkelgrau */
+    font-size: 0.875rem; /* Textgröße */
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  #filter-dropdown li a:hover {
+    background-color: #c7c8cb; /* Leichtes Grau beim Hover */
+    color: #1f2937; /* Dunkleres Grau */
+    font-weight: bold;
+  }
+  
+  /* Dark Mode */
+  .dark #filter-dropdown {
+    background-color: #1f2937; /* Dunkles Grau */
+    border-color: #374151; /* Etwas helleres Grau */
+  }
+  
+  .dark #filter-dropdown li a {
+    color: #d1d5db; /* Hellgrau */
+  }
+  
+  .dark #filter-dropdown li a:hover {
+    background-color: #374151; /* Dunkleres Grau beim Hover */
+    color: #ffffff; /* Weiß */
+  }
+  
+  /* Keyframes für Fade-In-Effekt */
+@keyframes dropdown-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
